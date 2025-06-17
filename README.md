@@ -15,3 +15,9 @@
 - `start`: runs the compiled application.
 - `dev`: runs the application using `ts-node` for development without compiling.
 - `prestart`: ensures the project is built before starting.
+
+## Docker
+
+- A `Dockerfile` along with prod and dev `docker-compose` files were created for an enhanced testing experience.
+- Instead of running the scripts to run/test this code, I highly recommend running `docker-compose.dev.yaml`.
+- Additionally, there is `docker-compose.prod.yaml` for production.
