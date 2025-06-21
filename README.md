@@ -1,23 +1,75 @@
 # Hatsumai-BE
 
-## Code Structure
+A TypeScript-based Express backend with PostgreSQL and Knex.js, structured for clarity and scalability.
 
-- `controllers`: contains the logic for handling requests and responses.
-- `routes`: defines application routes and links them to controllers.
-- `services`: contains business logic and interacts with data sources or external APIs.
-- `types`: defines TypeScript types and interfaces.
-- `app.ts`: initializes the Express application and middleware.
-- `index.ts`: the entry point of the application.
+---
 
-## Scripts
+## 📁 Code Structure
 
-- `build`: compiles TypeScript files into JavaScript.
-- `start`: runs the compiled application.
-- `dev`: runs the application using `ts-node` for development without compiling.
-- `prestart`: ensures the project is built before starting.
+- `controllers/` – Handles request and response logic.
+- `routes/` – Defines application routes and maps them to controllers.
+- `services/` – Contains business logic and interacts with data sources or external APIs.
+- `types/` – Defines TypeScript types and interfaces.
+- `app.ts` – Initializes the Express app and middleware.
+- `index.ts` – Entry point of the application.
 
-## Docker
+---
 
-- A `Dockerfile` along with prod and dev `docker-compose` files were created for an enhanced testing experience.
-- Instead of running the scripts to run/test this code, I highly recommend running `docker-compose.dev.yaml`.
-- Additionally, there is `docker-compose.prod.yaml` for production.
+## 🛠️ Scripts
+
+| Script     | Description                                       |
+| ---------- | ------------------------------------------------- |
+| `build`    | Compiles TypeScript to JavaScript.                |
+| `start`    | Runs the compiled app from the `dist` folder.     |
+| `dev`      | Runs the app in development mode using `ts-node`. |
+| `prestart` | Builds the project before running `start`.        |
+
+---
+
+## 🐳 Docker
+
+This project includes Docker support for both development and production environments.
+
+### Development
+
+To run the development setup with hot reloading and Postgres:
+
+```bash
+docker-compose -f docker-compose.dev.yaml up --build
+```
+
+This is the recommended way to test and develop the app locally.
+
+### Production
+
+To run the production build:
+
+```bash
+docker-compose -f docker-compose.prod.yaml up --build
+```
+
+⚠️ Be sure to configure production environment variables appropriately.
+
+---
+
+## Knex
+
+This project uses [Knex.js](https://knexjs.org/) as the SQL query builder for managing the PostgreSQL database schema.
+
+To apply all pending migrations, run:
+
+```bash
+npx knex migrate:latest
+```
+
+Or, if you have Knex installed globally:
+
+```bash
+knex migrate:latest
+```
+
+This ensures your local database schema matches the latest structure.
+
+## 📬 Contact
+
+For questions or feedback, feel free to open an issue or reach out via GitHub.
