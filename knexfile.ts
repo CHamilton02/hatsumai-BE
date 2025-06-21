@@ -2,21 +2,13 @@ import type { Knex } from 'knex'
 
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: 'postgres',
-    connection: {
-      database: 'devdb',
-      user: 'postgres',
-      password: 'postgres',
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
   },
 
   staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'proddb',
-      user: 'postgres',
-      password: 'postgres',
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10,
@@ -27,12 +19,8 @@ const config: { [key: string]: Knex.Config } = {
   },
 
   production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password',
-    },
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
       max: 10,
@@ -43,4 +31,4 @@ const config: { [key: string]: Knex.Config } = {
   },
 }
 
-module.exports = config
+export default config

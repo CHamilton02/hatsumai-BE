@@ -29,4 +29,4 @@ EXPOSE 8080
 ENV NODE_ENV=$NODE_ENV
 
 # Command to run the application
-CMD ["sh", "-c", "if [\"$NODE_ENV\" = 'prod']; then npm start; else npm run dev; fi"]
+CMD ["sh", "-c", "if [ \"$NODE_ENV\" = 'prod' ] ; then npm start; else npm run dev; fi"]
