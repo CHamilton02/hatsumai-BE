@@ -52,7 +52,7 @@ docker-compose -f docker-compose.prod.yaml up --build
 
 ---
 
-## Knex
+## 🧱 Knex
 
 This project uses [Knex.js](https://knexjs.org/) as the SQL query builder for managing the PostgreSQL database schema.
 
