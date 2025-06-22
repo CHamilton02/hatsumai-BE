@@ -10,12 +10,12 @@ export const verifyToken = (
   const token = req.headers.authorization
 
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' })
+    return next()
   }
 
   jwt.verify(token, 'secret', (err, decoded) => {
     if (err) {
-      return res.status(401).json({ error: 'Invalid token' })
+      return next()
     }
 
     req.user = decoded

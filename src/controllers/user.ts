@@ -1,13 +1,20 @@
 import { Request, Response } from 'express'
 import { loginUser, registerUser } from '../services/user'
-import { EmailExistsError, InvalidCredentialsError } from '../utils/errors/user'
+import {
+  EmailExistsError,
+  InvalidCredentialsError,
+  InvalidEmailFormatError,
+} from '../utils/errors/user'
 
 export async function register(req: Request, res: Response) {
   try {
     await registerUser(req)
     res.status(201).json({ message: 'User registered successfully' })
   } catch (error) {
-    if (error instanceof EmailExistsError)
+    if (
+      error instanceof InvalidEmailFormatError ||
+      error instanceof EmailExistsError
+    )
       res.status(400).json({ error: error.message })
     res.status(500).json({ error: 'Internal server error' })
   }

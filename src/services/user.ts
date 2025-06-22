@@ -1,4 +1,8 @@
-import { EmailExistsError, InvalidCredentialsError } from '../utils/errors/user'
+import {
+  EmailExistsError,
+  InvalidCredentialsError,
+  InvalidEmailFormatError,
+} from '../utils/errors/user'
 import { Request } from 'express'
 import db from '../config/database'
 import bcrypt from 'bcryptjs'
@@ -6,6 +10,9 @@ import { User } from '../types/User'
 import jwt from 'jsonwebtoken'
 
 export async function registerUser(req: Request) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)) {
+    throw new InvalidEmailFormatError('Invalid email format used')
+  }
   const existingUser = await db('users')
     .where('email', '=', req.body.email)
     .first()

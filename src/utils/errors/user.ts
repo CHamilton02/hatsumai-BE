@@ -1,3 +1,11 @@
+export class InvalidEmailFormatError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'InvalidEmailFormat'
+    Object.setPrototypeOf(this, InvalidEmailFormatError.prototype)
+  }
+}
+
 export class EmailExistsError extends Error {
   constructor(message: string) {
     super(message)
