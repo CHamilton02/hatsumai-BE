@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express'
-import { AuthenticatedRequest } from '../types/User'
+import { AuthenticatedRequest, User } from '../types/User'
 import jwt from 'jsonwebtoken'
 
 export const verifyToken = (
@@ -18,7 +18,7 @@ export const verifyToken = (
       return next()
     }
 
-    req.user = decoded
+    req.user = decoded as User
     next()
   })
 }

@@ -1,8 +1,10 @@
-import { Request } from 'express'
 import { InvalidGenerateProjectRequestFormat } from '../utils/errors/project'
 import OpenAI from 'openai'
+import db from '../config/database'
+import { AuthenticatedRequest } from '../types/User'
+import { GeneratedProject } from '../types/Project'
 
-export async function generateProject(req: Request) {
+export async function generateProject(req: AuthenticatedRequest) {
   if (
     req.body.topics === undefined ||
     req.body.difficulty === undefined ||
@@ -29,4 +31,48 @@ export async function generateProject(req: Request) {
       },
     ],
   })
+
+  const generatedProject: GeneratedProject = await JSON.parse(
+    generatedProjectResponse.choices[0].message.content as string,
+  )
+
+  const existingUser = await db('users')
+    .where('email', '=', req.user?.email || '')
+    .first()
+
+  const generatedProjectId = (
+    (await db('projects')
+      .insert({
+        project_name: generatedProject.title,
+        description: generatedProject.description,
+        created_by: existingUser ? existingUser.email : null,
+      })
+      .returning('id')) as Array<{ id: number }>
+  )[0].id
+
+  for (let topic of req.body.topics) {
+    await db('project_topics').insert({
+      project_id: generatedProjectId,
+      topic: topic,
+    })
+
+    const topicDBVal = await db('topics').where('topic', topic).first()
+
+    if (topicDBVal)
+      await db('topics')
+        .where('topic', topic)
+        .update({ count: topicDBVal.count + 1 })
+    else {
+      await db('topics').insert({ topic: topic, count: 1 })
+    }
+  }
+
+  for (let tip of generatedProject.tips) {
+    await db('project_tips').insert({
+      project_id: generatedProjectId,
+      tip: tip,
+    })
+  }
+
+  return generatedProject
 }

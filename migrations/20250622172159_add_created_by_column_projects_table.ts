@@ -2,7 +2,7 @@ import type { Knex } from 'knex'
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.table('projects', (t) => {
-    t.string('created_by').notNullable()
+    t.string('created_by')
   })
 }
 
