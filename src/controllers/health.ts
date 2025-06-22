@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import db from '../../database'
+import db from '../config/database'
 
 export async function database(req: Request, res: Response) {
   try {

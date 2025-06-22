@@ -1,6 +1,6 @@
 import { EmailExistsError, InvalidCredentialsError } from '../utils/errors/user'
 import { Request } from 'express'
-import db from '../../database'
+import db from '../config/database'
 import bcrypt from 'bcryptjs'
 import { User } from '../types/User'
 import jwt from 'jsonwebtoken'
