@@ -3,7 +3,7 @@ import type { Knex } from 'knex'
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: 'postgresql://postgres:postgres@localhost:5432/devdb',
   },
 
   staging: {
@@ -20,7 +20,7 @@ const config: { [key: string]: Knex.Config } = {
 
   production: {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: 'postgresql://postgres:postgres@localhost:5432/proddb',
     pool: {
       min: 2,
       max: 10,

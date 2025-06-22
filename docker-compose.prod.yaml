@@ -6,6 +6,8 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/proddb
+    env_file:
+      - .env
     depends_on:
       - postgres
 
