@@ -2,8 +2,9 @@ import { InvalidGenerateProjectRequestFormat } from '../utils/errors/project'
 import OpenAI from 'openai'
 import db from '../config/database'
 import { AuthenticatedRequest } from '../types/User'
-import { GeneratedProject } from '../types/Project'
+import { GeneratedProject, ProjectHistory } from '../types/Project'
 import { Request } from 'express'
+import { EmailDoesNotExistError } from '../utils/errors/user'
 
 export async function generateProjectService(req: AuthenticatedRequest) {
   if (
@@ -84,4 +85,33 @@ export async function getTopTenProjectTopicsService(req: Request) {
     .orderBy('count', 'desc')
     .limit(10)
   return projectTopics.map((projectTopic) => projectTopic.topic)
+}
+
+export async function getProjectHistoryService(req: AuthenticatedRequest) {
+  const existingUser = await db('users')
+    .where('email', '=', req.user?.email || '')
+    .first()
+
+  if (!req.user || !existingUser)
+    throw new EmailDoesNotExistError('User does not exist')
+
+  const projectsByUser = await db('projects')
+    .where('created_by', req.user.email)
+    .orderBy('created_at', 'asc')
+
+  const generatedProjectHistory: Array<ProjectHistory> = []
+
+  for (let project of projectsByUser) {
+    const topics = (
+      await db('project_topics').select('topic').where('project_id', project.id)
+    ).map((topic) => topic.topic)
+    generatedProjectHistory.push({
+      id: project.id,
+      title: project.project_name,
+      description: project.description,
+      topics: topics,
+    })
+  }
+
+  return generatedProjectHistory
 }

@@ -3,3 +3,10 @@ export interface GeneratedProject {
   description: string
   tips: Array<string>
 }
+
+export interface ProjectHistory {
+  id: number
+  title: string
+  description: string
+  topics: Array<string>
+}
