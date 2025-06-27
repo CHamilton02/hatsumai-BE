@@ -20,8 +20,10 @@ export async function generateProject(
     const generatedProject = await generateProjectService(req)
     res.status(201).json(generatedProject)
   } catch (error) {
-    if (error instanceof InvalidGenerateProjectRequestFormat)
+    if (error instanceof InvalidGenerateProjectRequestFormat) {
       res.status(400).json({ error: error.message })
+      return
+    }
     res.status(500).json({ error: 'Internal server error' })
   }
 }
@@ -40,8 +42,10 @@ export async function getProjectHistory(req: Request, res: Response) {
     const projectHistory = await getProjectHistoryService(req)
     res.status(200).json(projectHistory)
   } catch (error) {
-    if (error instanceof EmailDoesNotExistError)
+    if (error instanceof EmailDoesNotExistError) {
       res.status(404).json({ error: error.message })
+      return
+    }
     res.status(500).json({ error: 'Internal server error' })
   }
 }
@@ -56,6 +60,7 @@ export async function getProjectById(req: Request, res: Response) {
       error instanceof UnableToAccessProject
     ) {
       res.status(401).json({ error: error.message })
+      return
     }
     res.status(500).json({ error: 'Internal server error' })
   }

@@ -14,8 +14,10 @@ export async function register(req: Request, res: Response) {
     if (
       error instanceof InvalidEmailFormatError ||
       error instanceof EmailExistsError
-    )
+    ) {
       res.status(400).json({ error: error.message })
+      return
+    }
     res.status(500).json({ error: 'Internal server error' })
   }
 }
@@ -25,8 +27,10 @@ export async function login(req: Request, res: Response) {
     const token = await loginUser(req)
     res.status(200).json({ token })
   } catch (error) {
-    if (error instanceof InvalidCredentialsError)
+    if (error instanceof InvalidCredentialsError) {
       res.status(401).json({ error: error.message })
+      return
+    }
     res.status(500).json({ error: 'Internal server error' })
   }
 }
