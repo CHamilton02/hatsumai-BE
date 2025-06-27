@@ -3,8 +3,9 @@ import OpenAI from 'openai'
 import db from '../config/database'
 import { AuthenticatedRequest } from '../types/User'
 import { GeneratedProject } from '../types/Project'
+import { Request } from 'express'
 
-export async function generateProject(req: AuthenticatedRequest) {
+export async function generateProjectService(req: AuthenticatedRequest) {
   if (
     req.body.topics === undefined ||
     req.body.difficulty === undefined ||
@@ -75,4 +76,12 @@ export async function generateProject(req: AuthenticatedRequest) {
   }
 
   return generatedProject
+}
+
+export async function getTopTenProjectTopicsService(req: Request) {
+  const projectTopics = await db('topics')
+    .select('topic')
+    .orderBy('count', 'desc')
+    .limit(10)
+  return projectTopics.map((projectTopic) => projectTopic.topic)
 }
