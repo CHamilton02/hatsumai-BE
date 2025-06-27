@@ -1,3 +1,11 @@
+export class UserNotLoggedIn extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'UserNotLoggedIn'
+    Object.setPrototypeOf(this, UserNotLoggedIn.prototype)
+  }
+}
+
 export class InvalidEmailFormatError extends Error {
   constructor(message: string) {
     super(message)

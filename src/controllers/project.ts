@@ -1,12 +1,16 @@
 import { Request, Response } from 'express'
 import {
   generateProjectService,
+  getProjectByIdService,
   getProjectHistoryService,
   getTopTenProjectTopicsService,
 } from '../services/project'
 import { AuthenticatedRequest } from '../types/User'
-import { InvalidGenerateProjectRequestFormat } from '../utils/errors/project'
-import { EmailDoesNotExistError } from '../utils/errors/user'
+import {
+  InvalidGenerateProjectRequestFormat,
+  UnableToAccessProject,
+} from '../utils/errors/project'
+import { EmailDoesNotExistError, UserNotLoggedIn } from '../utils/errors/user'
 
 export async function generateProject(
   req: AuthenticatedRequest,
@@ -38,6 +42,21 @@ export async function getProjectHistory(req: Request, res: Response) {
   } catch (error) {
     if (error instanceof EmailDoesNotExistError)
       res.status(404).json({ error: error.message })
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+export async function getProjectById(req: Request, res: Response) {
+  try {
+    const projectById = await getProjectByIdService(req)
+    res.status(200).json(projectById)
+  } catch (error) {
+    if (
+      error instanceof UserNotLoggedIn ||
+      error instanceof UnableToAccessProject
+    ) {
+      res.status(401).json({ error: error.message })
+    }
     res.status(500).json({ error: 'Internal server error' })
   }
 }

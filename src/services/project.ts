@@ -1,10 +1,13 @@
-import { InvalidGenerateProjectRequestFormat } from '../utils/errors/project'
+import {
+  InvalidGenerateProjectRequestFormat,
+  UnableToAccessProject,
+} from '../utils/errors/project'
 import OpenAI from 'openai'
 import db from '../config/database'
 import { AuthenticatedRequest } from '../types/User'
 import { GeneratedProject, ProjectHistory } from '../types/Project'
 import { Request } from 'express'
-import { EmailDoesNotExistError } from '../utils/errors/user'
+import { EmailDoesNotExistError, UserNotLoggedIn } from '../utils/errors/user'
 
 export async function generateProjectService(req: AuthenticatedRequest) {
   if (
@@ -88,12 +91,15 @@ export async function getTopTenProjectTopicsService(req: Request) {
 }
 
 export async function getProjectHistoryService(req: AuthenticatedRequest) {
+  if (!req.user) {
+    throw new UserNotLoggedIn('User is not logged in')
+  }
+
   const existingUser = await db('users')
     .where('email', '=', req.user?.email || '')
     .first()
 
-  if (!req.user || !existingUser)
-    throw new EmailDoesNotExistError('User does not exist')
+  if (!existingUser) throw new EmailDoesNotExistError('User does not exist')
 
   const projectsByUser = await db('projects')
     .where('created_by', req.user.email)
@@ -114,4 +120,33 @@ export async function getProjectHistoryService(req: AuthenticatedRequest) {
   }
 
   return generatedProjectHistory
+}
+
+export async function getProjectByIdService(req: AuthenticatedRequest) {
+  if (!req.user) {
+    throw new UserNotLoggedIn('User is not logged in')
+  }
+
+  const projectByIdQuery = await db('projects')
+    .where('id', req.params.projectId)
+    .andWhere('created_by', req.user.email)
+    .first()
+
+  if (!projectByIdQuery) {
+    throw new UnableToAccessProject('User is not able to access this project')
+  }
+
+  const projectTips = (
+    await db('project_tips')
+      .select('tip')
+      .where('project_id', req.params.projectId)
+  ).map((tip) => tip.tip)
+
+  const projectById: GeneratedProject = {
+    title: projectByIdQuery.project_name,
+    description: projectByIdQuery.description,
+    tips: projectTips,
+  }
+
+  return projectById
 }
