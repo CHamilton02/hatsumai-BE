@@ -79,7 +79,7 @@ export async function generateProjectService(req: AuthenticatedRequest) {
     })
   }
 
-  return generatedProject
+  return { projectId: generatedProjectId }
 }
 
 export async function getTopTenProjectTopicsService(req: Request) {
