@@ -6,6 +6,9 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/proddb
+      - APP_URL=hatsumai.com
+      - SMTP_USER=hatsumai.help@gmail.com
+      - SMTP_PASS=qnvtmyjycwevnrcc
     env_file:
       - .env
     depends_on:
