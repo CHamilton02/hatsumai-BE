@@ -6,10 +6,10 @@ export class InvalidGenerateProjectRequestFormat extends Error {
   }
 }
 
-export class UnableToAccessProject extends Error {
+export class ProjectDoesNotExist extends Error {
   constructor(message: string) {
     super(message)
-    this.name = 'UnableToAccessProject'
-    Object.setPrototypeOf(this, UnableToAccessProject.prototype)
+    this.name = 'ProjectDoesNotExist'
+    Object.setPrototypeOf(this, ProjectDoesNotExist.prototype)
   }
 }

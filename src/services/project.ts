@@ -1,6 +1,6 @@
 import {
   InvalidGenerateProjectRequestFormat,
-  UnableToAccessProject,
+  ProjectDoesNotExist,
 } from '../utils/errors/project'
 import OpenAI from 'openai'
 import db from '../config/database'
@@ -123,17 +123,12 @@ export async function getProjectHistoryService(req: AuthenticatedRequest) {
 }
 
 export async function getProjectByIdService(req: AuthenticatedRequest) {
-  if (!req.user) {
-    throw new UserNotLoggedIn('User is not logged in')
-  }
-
   const projectByIdQuery = await db('projects')
     .where('id', req.params.projectId)
-    .andWhere('created_by', req.user.email)
     .first()
 
   if (!projectByIdQuery) {
-    throw new UnableToAccessProject('User is not able to access this project')
+    throw new ProjectDoesNotExist('Project does not exist.')
   }
 
   const projectTips = (

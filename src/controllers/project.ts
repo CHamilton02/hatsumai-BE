@@ -8,7 +8,7 @@ import {
 import { AuthenticatedRequest } from '../types/User'
 import {
   InvalidGenerateProjectRequestFormat,
-  UnableToAccessProject,
+  ProjectDoesNotExist,
 } from '../utils/errors/project'
 import { EmailDoesNotExistError, UserNotLoggedIn } from '../utils/errors/user'
 
@@ -57,7 +57,7 @@ export async function getProjectById(req: Request, res: Response) {
   } catch (error) {
     if (
       error instanceof UserNotLoggedIn ||
-      error instanceof UnableToAccessProject
+      error instanceof ProjectDoesNotExist
     ) {
       res.status(401).json({ error: error.message })
       return
