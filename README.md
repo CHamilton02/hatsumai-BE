@@ -28,7 +28,7 @@ A TypeScript-based Express backend with PostgreSQL and Knex.js, structured for c
 
 ## 🐳 Docker
 
-This project includes Docker support for both development and production environments.
+This project includes Docker support for development environments.
 
 ### Development
 
@@ -39,16 +39,6 @@ docker-compose -f docker-compose.dev.yaml up --build
 ```
 
 This is the recommended way to test and develop the app locally.
-
-### Production
-
-To run the production build:
-
-```bash
-docker-compose -f docker-compose.prod.yaml up --build
-```
-
-⚠️ Be sure to configure production environment variables appropriately.
 
 ---
 
