@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "knex migrate:latest && node dist/index.js",
     "dev": "ts-node src/index.ts",
     "prestart": "npm run build"
   },
