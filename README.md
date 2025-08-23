@@ -60,6 +60,12 @@ knex migrate:latest
 
 This ensures your local database schema matches the latest structure.
 
+To create a new migration, run:
+
+```bash
+knex migrate:make name_of_migration
+```
+
 ## 📬 Contact
 
 For questions or feedback, feel free to open an issue or reach out via GitHub.
