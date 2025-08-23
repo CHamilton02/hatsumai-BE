@@ -45,3 +45,19 @@ export class ExistingPasswordResetRequest extends Error {
     Object.setPrototypeOf(this, ExistingPasswordResetRequest.prototype)
   }
 }
+
+export class PasswordResetRequestNotFound extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'PasswordResetRequestNotFound'
+    Object.setPrototypeOf(this, PasswordResetRequestNotFound.prototype)
+  }
+}
+
+export class PasswordResetRequestExpired extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'PasswordResetRequestExpired'
+    Object.setPrototypeOf(this, PasswordResetRequestExpired.prototype)
+  }
+}

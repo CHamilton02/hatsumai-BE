@@ -4,6 +4,8 @@ import {
   ExistingPasswordResetRequest,
   InvalidCredentialsError,
   InvalidEmailFormatError,
+  PasswordResetRequestExpired,
+  PasswordResetRequestNotFound,
 } from '../utils/errors/user'
 import { Request } from 'express'
 import db from '../config/database'
@@ -71,10 +73,6 @@ export async function forgotPasswordService(req: Request) {
         'There is an existing password reset request.',
       )
     }
-
-    await db('user_password_resets')
-      .where('user_email', '=', req.body.email)
-      .del()
   }
 
   const passwordResetToken = crypto.randomBytes(16).toString('hex')
@@ -93,4 +91,33 @@ export async function forgotPasswordService(req: Request) {
   } catch (error) {
     throw new Error('Something went wrong sending the email.')
   }
+}
+
+export async function resetPasswordService(req: Request) {
+  const existingUserPasswordResetRequest = await db('user_password_resets')
+    .where('token', '=', req.body.token)
+    .first()
+
+  if (!existingUserPasswordResetRequest) {
+    throw new PasswordResetRequestNotFound('Password reset request not found.')
+  }
+
+  const expirationDate = new Date(
+    existingUserPasswordResetRequest.requested_at.getTime() + 10 * 60000,
+  )
+  const currentDate = new Date()
+
+  if (currentDate >= expirationDate || existingUserPasswordResetRequest.used) {
+    throw new PasswordResetRequestExpired('Password reset request is expired')
+  }
+
+  const hashedPassword = await bcrypt.hash(req.body.newPassword, 10)
+
+  await db('users')
+    .where('email', '=', existingUserPasswordResetRequest.user_email)
+    .update({ password: hashedPassword })
+
+  await db('user_password_resets')
+    .where('token', '=', req.body.token)
+    .update({ used: true })
 }
