@@ -4,6 +4,7 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: 'pg',
     connection: 'postgresql://postgres:postgres@localhost:5432/devdb',
+    searchPath: ['public'],
   },
 
   staging: {
@@ -16,6 +17,7 @@ const config: { [key: string]: Knex.Config } = {
     migrations: {
       tableName: 'knex_migrations',
     },
+    searchPath: ['public'],
   },
 
   production: {
@@ -28,6 +30,7 @@ const config: { [key: string]: Knex.Config } = {
     migrations: {
       tableName: 'knex_migrations',
     },
+    searchPath: ['public'],
   },
 }
 
