@@ -27,12 +27,30 @@ export async function generateProjectService(req: AuthenticatedRequest) {
     messages: [
       {
         role: 'system',
-        content:
-          'You are an assistant that only responds in strict JSON format. Output must match the following schema exactly: {\"title\": \"string\", \"description\": \"string\", \"tips\": [\"string\"]}',
+        content: `You are an assistant that responds ONLY in valid JSON. 
+Do not include explanations, commentary, or text outside of the JSON. 
+Your output MUST strictly follow this schema:
+{
+  "title": "string (a specific, themed project name, not generic)",
+  "description": "string (3–5 sentences explaining what the project does, who it helps, and why it is interesting)",
+  "tips": ["string (actionable and specific to this project)", "..."]
+}
+
+Guidelines:
+- Do NOT simply restate the input topics. Instead, combine them into a unique and creative project idea with a clear theme or use case.
+- The title should feel like a real project name (e.g., 'AI Study Buddy for Programmers' rather than 'ML-Powered Web Application').
+- The description must explain the purpose, theme, and value of the project.
+- Tips should help the student actually build or improve this project, tailored to the chosen theme.`,
       },
       {
         role: 'user',
-        content: `Generate a project for a Computer Science student given the topics, description and difficulty. Topics: ${req.body.topics}, Description: ${req.body.description}, Difficulty: ${req.body.difficutly}`,
+        content: `Generate a project idea for a Computer Science student. 
+Inputs:
+- Topics: ${req.body.topics}
+- Description: ${req.body.description}
+- Difficulty: ${req.body.difficulty}
+
+Return only the JSON response following the schema.`,
       },
     ],
   })
